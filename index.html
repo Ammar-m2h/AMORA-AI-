@@ -1,401 +1,1119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111827">
-  <title>AMORA AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<meta name="description" content="AMORA AI - Your next-generation personal AI assistant">
+<title>AMORA AI</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b1020;
-      color: #ffffff;
-      min-height: 100vh;
-    }
+:root{
+  --bg:#05070d;
+  --panel:#0a0f1a;
+  --panel2:#0d1422;
+  --border:#1b2a3d;
+  --text:#f4f7fb;
+  --muted:#8996a8;
+  --blue:#287cff;
+  --red:#ff3158;
+  --green:#28d7a0;
+}
 
-    .app {
-      width: 100%;
-      max-width: 900px;
-      margin: auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(40,124,255,.10),transparent 28%),
+    radial-gradient(circle at 85% 20%,rgba(255,49,88,.08),transparent 28%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow:hidden;
+}
 
-    header {
-      padding: 16px;
-      background: #111827;
-      border-bottom: 1px solid #273244;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+button,textarea{font:inherit}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+button{cursor:pointer}
 
-    .logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed, #2563eb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 17px;
-    }
+.app{
+  display:flex;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+}
 
-    .brand h1 {
-      font-size: 20px;
-    }
+/* SIDEBAR */
 
-    .brand p {
-      color: #9ca3af;
-      font-size: 12px;
-      margin-top: 2px;
-    }
+.sidebar{
+  width:250px;
+  flex-shrink:0;
+  background:rgba(7,11,19,.96);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  padding:16px;
+  z-index:30;
+}
 
-    .menu-btn {
-      border: 0;
-      background: #1f2937;
-      color: white;
-      border-radius: 10px;
-      padding: 10px 13px;
-      font-size: 18px;
-      cursor: pointer;
-    }
+.logo-row{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:20px;
+}
 
-    #chat {
-      flex: 1;
-      padding: 20px 14px 120px;
-      overflow-y: auto;
-    }
+.logo{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:18px;
+  background:linear-gradient(135deg,var(--red),var(--blue));
+  box-shadow:0 0 25px rgba(40,124,255,.25);
+}
 
-    .welcome {
-      text-align: center;
-      padding: 70px 15px 30px;
-    }
+.logo-text b{
+  display:block;
+  font-size:17px;
+  letter-spacing:.5px;
+}
 
-    .welcome .big-logo {
-      width: 75px;
-      height: 75px;
-      margin: auto;
-      border-radius: 24px;
-      background: linear-gradient(135deg, #7c3aed, #2563eb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 25px;
-      font-weight: bold;
-    }
+.logo-text span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:3px;
+}
 
-    .welcome h2 {
-      margin-top: 18px;
-      font-size: 28px;
-    }
+.new-chat{
+  border:1px solid #24456b;
+  background:linear-gradient(135deg,#10233d,#111827);
+  color:white;
+  border-radius:12px;
+  padding:12px;
+  text-align:left;
+  margin-bottom:18px;
+}
 
-    .welcome p {
-      margin-top: 8px;
-      color: #9ca3af;
-      line-height: 1.5;
-    }
+.new-chat:hover{
+  border-color:var(--blue);
+}
 
-    .message {
-      display: flex;
-      margin: 14px 0;
-    }
+.side-title{
+  color:#66758a;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1.3px;
+  margin:8px 5px;
+}
 
-    .message.user {
-      justify-content: flex-end;
-    }
+.history{
+  flex:1;
+  overflow:auto;
+}
 
-    .bubble {
-      max-width: 85%;
-      padding: 12px 15px;
-      border-radius: 16px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
+.history-item{
+  padding:10px;
+  border-radius:9px;
+  color:#c8d0dc;
+  font-size:13px;
+  margin-bottom:4px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
 
-    .user .bubble {
-      background: #4f46e5;
-      border-bottom-right-radius: 5px;
-    }
+.history-item:hover{
+  background:#101a29;
+}
 
-    .ai .bubble {
-      background: #182235;
-      border: 1px solid #29364c;
-      border-bottom-left-radius: 5px;
-    }
+.sidebar-bottom{
+  border-top:1px solid var(--border);
+  padding-top:12px;
+}
 
-    .suggestions {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      max-width: 600px;
-      margin: 20px auto;
-    }
+.side-btn{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#b9c4d2;
+  padding:10px;
+  text-align:left;
+  border-radius:9px;
+}
 
-    .suggestion {
-      padding: 13px;
-      border: 1px solid #303d52;
-      background: #121a2a;
-      color: #e5e7eb;
-      border-radius: 13px;
-      text-align: left;
-      cursor: pointer;
-    }
+.side-btn:hover{
+  background:#101a29;
+  color:white;
+}
 
-    .suggestion:hover {
-      background: #1b2639;
-    }
+/* MAIN */
 
-    .input-area {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 12px;
-      background: rgba(11, 16, 32, 0.96);
-      border-top: 1px solid #273244;
-    }
+.main{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
 
-    .input-box {
-      max-width: 900px;
-      margin: auto;
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-    }
+.topbar{
+  height:64px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  border-bottom:1px solid var(--border);
+  background:rgba(5,7,13,.75);
+  backdrop-filter:blur(15px);
+  z-index:10;
+}
 
-    textarea {
-      flex: 1;
-      min-height: 48px;
-      max-height: 130px;
-      resize: none;
-      border: 1px solid #344156;
-      border-radius: 15px;
-      background: #151e2f;
-      color: white;
-      padding: 13px;
-      outline: none;
-      font-family: inherit;
-      font-size: 15px;
-    }
+.mobile-menu{
+  display:none;
+  border:1px solid var(--border);
+  background:#0c1421;
+  color:white;
+  border-radius:9px;
+  padding:8px 10px;
+}
 
-    textarea:focus {
-      border-color: #6366f1;
-    }
+.status{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#9ca8b7;
+  font-size:12px;
+}
 
-    button.send {
-      width: 48px;
-      height: 48px;
-      border: 0;
-      border-radius: 14px;
-      background: #6366f1;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
+.status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green);
+}
 
-    button.send:active {
-      transform: scale(0.95);
-    }
+.top-actions{
+  display:flex;
+  gap:7px;
+}
 
-    .typing {
-      color: #9ca3af;
-      font-size: 13px;
-      margin: 8px 5px;
-    }
+.icon-btn{
+  border:1px solid var(--border);
+  background:#0b111c;
+  color:#cbd5e1;
+  border-radius:9px;
+  padding:8px 10px;
+}
 
-    @media (max-width: 600px) {
-      .welcome {
-        padding-top: 45px;
-      }
+.icon-btn:hover{
+  border-color:#345579;
+  color:white;
+}
 
-      .welcome h2 {
-        font-size: 24px;
-      }
+/* CHAT */
 
-      .suggestions {
-        grid-template-columns: 1fr;
-      }
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:30px 5%;
+  scroll-behavior:smooth;
+}
 
-      .bubble {
-        max-width: 90%;
-      }
-    }
-  </style>
+.welcome{
+  max-width:850px;
+  margin:8vh auto 30px;
+  text-align:center;
+}
+
+.welcome-logo{
+  width:90px;
+  height:90px;
+  margin:auto;
+  border-radius:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--red),var(--blue));
+  box-shadow:
+    0 0 35px rgba(40,124,255,.18),
+    0 0 70px rgba(255,49,88,.08);
+}
+
+.welcome h1{
+  font-size:36px;
+  margin-top:22px;
+}
+
+.welcome p{
+  color:var(--muted);
+  margin-top:9px;
+  line-height:1.5;
+}
+
+.quick-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:30px;
+}
+
+.quick{
+  min-height:80px;
+  text-align:left;
+  padding:14px;
+  border:1px solid var(--border);
+  background:linear-gradient(145deg,#0c1420,#080d16);
+  color:#dce4ee;
+  border-radius:13px;
+  transition:.18s;
+}
+
+.quick:hover{
+  transform:translateY(-2px);
+  border-color:#345d88;
+}
+
+.quick b{
+  display:block;
+  margin-bottom:6px;
+}
+
+.quick span{
+  color:#7f8da0;
+  font-size:11px;
+}
+
+/* MESSAGES */
+
+.message{
+  display:flex;
+  margin:18px auto;
+  max-width:900px;
+  gap:10px;
+}
+
+.message.user{
+  justify-content:flex-end;
+}
+
+.avatar{
+  width:30px;
+  height:30px;
+  flex-shrink:0;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:bold;
+  background:#172338;
+  color:#bcd5ff;
+}
+
+.message.user .avatar{
+  display:none;
+}
+
+.bubble{
+  max-width:min(760px,88%);
+  padding:13px 16px;
+  line-height:1.6;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  border-radius:15px;
+}
+
+.message.user .bubble{
+  background:linear-gradient(135deg,#1454b8,#254b91);
+  border-bottom-right-radius:4px;
+}
+
+.message.ai .bubble{
+  background:#0c1523;
+  border:1px solid #1b2b40;
+  border-bottom-left-radius:4px;
+}
+
+.message-actions{
+  display:flex;
+  gap:5px;
+  margin-top:7px;
+}
+
+.message-actions button{
+  border:1px solid var(--border);
+  background:#0a111c;
+  color:#8391a4;
+  padding:5px 8px;
+  border-radius:7px;
+  font-size:10px;
+}
+
+/* TYPING */
+
+.typing{
+  max-width:900px;
+  margin:10px auto;
+  color:#78869a;
+  font-size:12px;
+}
+
+.typing span{
+  animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+  50%{opacity:.3}
+}
+
+/* RIGHT PANEL */
+
+.right-panel{
+  width:220px;
+  flex-shrink:0;
+  border-left:1px solid var(--border);
+  background:rgba(7,11,18,.82);
+  padding:18px 14px;
+  overflow:auto;
+}
+
+.panel-title{
+  font-size:11px;
+  color:#77869a;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+
+.tool-card{
+  border:1px solid var(--border);
+  background:#0a111c;
+  border-radius:11px;
+  padding:11px;
+  margin-bottom:8px;
+  color:#cbd5e1;
+}
+
+.tool-card b{
+  font-size:12px;
+}
+
+.tool-card p{
+  color:#68778b;
+  font-size:10px;
+  margin-top:4px;
+}
+
+.tool-card button{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:inherit;
+  text-align:left;
+}
+
+/* INPUT */
+
+.input-wrap{
+  flex-shrink:0;
+  padding:12px 5% 17px;
+  background:linear-gradient(to top,rgba(5,7,13,1),rgba(5,7,13,.82));
+}
+
+.input-box{
+  max-width:900px;
+  margin:auto;
+  border:1px solid #25364c;
+  background:#0a111c;
+  border-radius:17px;
+  padding:9px;
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  box-shadow:0 0 30px rgba(0,0,0,.25);
+}
+
+.input-box:focus-within{
+  border-color:#356da8;
+}
+
+textarea{
+  flex:1;
+  min-height:42px;
+  max-height:140px;
+  resize:none;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  padding:10px 8px;
+}
+
+textarea::placeholder{
+  color:#647286;
+}
+
+.input-btn{
+  width:42px;
+  height:42px;
+  border:1px solid var(--border);
+  background:#0d1725;
+  color:#aebdce;
+  border-radius:11px;
+}
+
+.send{
+  background:linear-gradient(135deg,var(--red),var(--blue));
+  color:white;
+  border:0;
+}
+
+.send:disabled{
+  opacity:.4;
+}
+
+.hint{
+  max-width:900px;
+  margin:7px auto 0;
+  text-align:center;
+  color:#526075;
+  font-size:9px;
+}
+
+/* MODAL */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(7px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:20px;
+}
+
+.modal{
+  width:min(430px,100%);
+  background:#0b121e;
+  border:1px solid #24364d;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 20px 70px rgba(0,0,0,.5);
+}
+
+.modal h2{
+  font-size:20px;
+  margin-bottom:5px;
+}
+
+.modal-sub{
+  color:#758399;
+  font-size:12px;
+  margin-bottom:18px;
+}
+
+.personality{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.personality button{
+  border:1px solid var(--border);
+  background:#0d1623;
+  color:#cbd5e1;
+  padding:12px;
+  border-radius:10px;
+  text-align:left;
+}
+
+.personality button.active{
+  border-color:#3572b5;
+  background:#102139;
+}
+
+.close{
+  width:100%;
+  margin-top:15px;
+  padding:11px;
+  border:0;
+  background:#182334;
+  color:white;
+  border-radius:10px;
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+  .right-panel{display:none}
+}
+
+@media(max-width:700px){
+  body{overflow:hidden}
+
+  .sidebar{
+    position:fixed;
+    left:-270px;
+    top:0;
+    bottom:0;
+    transition:.2s;
+    box-shadow:20px 0 50px rgba(0,0,0,.4);
+  }
+
+  .sidebar.open{left:0}
+
+  .mobile-menu{
+    display:block;
+  }
+
+  .topbar{
+    padding:0 12px;
+  }
+
+  .status{
+    font-size:10px;
+  }
+
+  .chat{
+    padding:20px 12px;
+  }
+
+  .welcome{
+    margin-top:5vh;
+  }
+
+  .welcome-logo{
+    width:72px;
+    height:72px;
+    font-size:24px;
+  }
+
+  .welcome h1{
+    font-size:27px;
+  }
+
+  .quick-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .quick{
+    min-height:70px;
+  }
+
+  .bubble{
+    max-width:92%;
+  }
+
+  .input-wrap{
+    padding:9px 8px 11px;
+  }
+}
+
+@media(max-width:420px){
+  .quick-grid{
+    grid-template-columns:1fr;
+  }
+
+  .welcome h1{
+    font-size:24px;
+  }
+
+  .personality{
+    grid-template-columns:1fr;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <header>
-      <div class="brand">
-        <div class="logo">A</div>
-        <div>
-          <h1>AMORA AI</h1>
-          <p>Your next-generation AI assistant</p>
-        </div>
-      </div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
 
-      <button class="menu-btn" onclick="showMenu()">☰</button>
-    </header>
-
-    <main id="chat">
-
-      <section class="welcome" id="welcome">
-        <div class="big-logo">A</div>
-
-        <h2>Hello, I'm AMORA AI</h2>
-
-        <p>
-          Ask me anything. Your personal AI assistant is ready.
-        </p>
-
-        <div class="suggestions">
-          <button class="suggestion"
-            onclick="useSuggestion('Explain something to me simply')">
-            💡 Explain something
-          </button>
-
-          <button class="suggestion"
-            onclick="useSuggestion('Help me write some code')">
-            💻 Write code
-          </button>
-
-          <button class="suggestion"
-            onclick="useSuggestion('Give me some creative ideas')">
-            ✨ Creative ideas
-          </button>
-
-          <button class="suggestion"
-            onclick="useSuggestion('Help me make a plan')">
-            📋 Make a plan
-          </button>
-        </div>
-      </section>
-
-    </main>
-
-    <div class="input-area">
-      <div class="input-box">
-
-        <textarea
-          id="messageInput"
-          placeholder="Message AMORA AI..."
-          rows="1"
-          onkeydown="handleKey(event)"
-        ></textarea>
-
-        <button class="send" onclick="sendMessage()">➤</button>
-
+    <div class="logo-row">
+      <div class="logo">A</div>
+      <div class="logo-text">
+        <b>AMORA AI</b>
+        <span>NEXT-GENERATION ASSISTANT</span>
       </div>
     </div>
 
+    <button class="new-chat" onclick="newChat()">＋ New chat</button>
+
+    <div class="side-title">Recent chats</div>
+    <div class="history" id="history"></div>
+
+    <div class="sidebar-bottom">
+      <button class="side-btn" onclick="openPersonality()">🎭 AI Personality</button>
+      <button class="side-btn" onclick="openSettings()">⚙️ Settings</button>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+
+        <div class="status">
+          <span class="status-dot"></span>
+          AMORA AI • ONLINE
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" onclick="newChat()">＋</button>
+        <button class="icon-btn" onclick="openPersonality()">🎭</button>
+      </div>
+
+    </header>
+
+    <section class="chat" id="chat">
+
+      <div class="welcome" id="welcome">
+
+        <div class="welcome-logo">A</div>
+
+        <h1>Hello, I'm AMORA</h1>
+
+        <p>
+          Your personal AI assistant.<br>
+          Ask anything. Build anything. Learn anything.
+        </p>
+
+        <div class="quick-grid">
+
+          <button class="quick"
+            onclick="useSuggestion('Explain something to me simply')">
+            <b>💡 Explain</b>
+            <span>Make difficult topics simple</span>
+          </button>
+
+          <button class="quick"
+            onclick="useSuggestion('Help me write some code')">
+            <b>💻 Code</b>
+            <span>Build and debug projects</span>
+          </button>
+
+          <button class="quick"
+            onclick="useSuggestion('Give me creative ideas')">
+            <b>✨ Create</b>
+            <span>Ideas, stories and concepts</span>
+          </button>
+
+          <button class="quick"
+            onclick="useSuggestion('Help me make a plan')">
+            <b>📋 Plan</b>
+            <span>Turn goals into steps</span>
+          </button>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT QUICK TOOLS -->
+    <aside class="right-panel">
+
+      <div class="panel-title">Quick tools</div>
+
+      <div class="tool-card">
+        <button onclick="useSuggestion('Help me write code')">
+          <b>💻 Code Assistant</b>
+          <p>Build, explain and debug code</p>
+        </button>
+      </div>
+
+      <div class="tool-card">
+        <button onclick="useSuggestion('Give me a creative idea')">
+          <b>✨ Creative AI</b>
+          <p>Ideas and creative thinking</p>
+        </button>
+      </div>
+
+      <div class="tool-card">
+        <button onclick="useSuggestion('Teach me something interesting')">
+          <b>🎓 Learn</b>
+          <p>Learn something new</p>
+        </button>
+      </div>
+
+      <div class="tool-card">
+        <button onclick="openPersonality()">
+          <b>🎭 Personality</b>
+          <p id="personalityLabel">Normal</p>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- INPUT -->
+    <div class="input-wrap">
+
+      <div class="input-box">
+
+        <button class="input-btn" onclick="startVoice()" title="Voice">
+          🎤
+        </button>
+
+        <textarea
+          id="messageInput"
+          placeholder="Message AMORA..."
+          rows="1"
+          oninput="autoResize(this)"
+          onkeydown="handleKey(event)"
+        ></textarea>
+
+        <button
+          class="input-btn send"
+          id="sendButton"
+          onclick="sendMessage()">
+          ➤
+        </button>
+
+      </div>
+
+      <div class="hint">
+        Enter to send • Shift + Enter for new line • AMORA can make mistakes
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- PERSONALITY MODAL -->
+
+<div class="overlay" id="personalityModal">
+
+  <div class="modal">
+
+    <h2>🎭 AMORA Personality</h2>
+
+    <p class="modal-sub">
+      Choose how AMORA talks with you.
+    </p>
+
+    <div class="personality">
+
+      <button onclick="setPersonality('normal')" id="p-normal">
+        <b>Normal</b><br>
+        <small>Clear & natural</small>
+      </button>
+
+      <button onclick="setPersonality('friend')" id="p-friend">
+        <b>Friend / Yaar</b><br>
+        <small>Casual & friendly</small>
+      </button>
+
+      <button onclick="setPersonality('filmy')" id="p-filmy">
+        <b>Filmy 🎬</b><br>
+        <small>Expressive & dramatic</small>
+      </button>
+
+      <button onclick="setPersonality('slang')" id="p-slang">
+        <b>Slang 😎</b><br>
+        <small>Very casual friend style</small>
+      </button>
+
+    </div>
+
+    <button class="close" onclick="closeModals()">Done</button>
+
   </div>
+</div>
 
-  <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("messageInput");
+<!-- SETTINGS MODAL -->
 
-    function addMessage(text, type) {
-      const message = document.createElement("div");
-      message.className = "message " + type;
+<div class="overlay" id="settingsModal">
 
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      bubble.textContent = text;
+  <div class="modal">
 
-      message.appendChild(bubble);
-      chat.appendChild(message);
+    <h2>⚙️ AMORA Settings</h2>
 
-      chat.scrollTop = chat.scrollHeight;
+    <p class="modal-sub">
+      Core settings for your assistant.
+    </p>
+
+    <button class="side-btn" onclick="clearHistory()">
+      🗑️ Clear local chat history
+    </button>
+
+    <button class="side-btn" onclick="newChat()">
+      🆕 Start a new conversation
+    </button>
+
+    <button class="close" onclick="closeModals()">Close</button>
+
+  </div>
+</div>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("messageInput");
+const sendButton = document.getElementById("sendButton");
+const historyBox = document.getElementById("history");
+
+let conversation = [];
+let currentChat = [];
+let personality = localStorage.getItem("amora_personality") || "normal";
+let isGenerating = false;
+let controller = null;
+
+/* ---------- STORAGE ---------- */
+
+function loadHistory(){
+  try{
+    const saved = JSON.parse(localStorage.getItem("amora_chats") || "[]");
+
+    saved.forEach((item,index)=>{
+      const button = document.createElement("div");
+      button.className = "history-item";
+      button.textContent = item.title || "Conversation " + (index+1);
+      button.onclick = () => loadConversation(index);
+      historyBox.appendChild(button);
+    });
+  }catch(e){
+    console.log(e);
+  }
+}
+
+function saveCurrentChat(){
+
+  if(!currentChat.length)return;
+
+  let chats = [];
+
+  try{
+    chats = JSON.parse(localStorage.getItem("amora_chats") || "[]");
+  }catch(e){}
+
+  const firstUser = currentChat.find(x => x.role === "user");
+
+  if(!firstUser)return;
+
+  const title = firstUser.text.slice(0,42);
+
+  chats.unshift({
+    title,
+    messages:currentChat,
+    personality
+  });
+
+  chats = chats.slice(0,20);
+
+  localStorage.setItem("amora_chats",JSON.stringify(chats));
+
+  renderHistory();
+}
+
+function renderHistory(){
+
+  historyBox.innerHTML="";
+
+  let chats=[];
+
+  try{
+    chats=JSON.parse(localStorage.getItem("amora_chats") || "[]");
+  }catch(e){}
+
+  chats.forEach((item,index)=>{
+    const button=document.createElement("div");
+    button.className="history-item";
+    button.textContent=item.title || "Conversation";
+    button.onclick=()=>loadConversation(index);
+    historyBox.appendChild(button);
+  });
+}
+
+function loadConversation(index){
+
+  const chats=JSON.parse(localStorage.getItem("amora_chats") || "[]");
+  const selected=chats[index];
+
+  if(!selected)return;
+
+  chat.innerHTML="";
+  currentChat=selected.messages || [];
+
+  currentChat.forEach(m=>{
+    addMessage(m.text,m.role==="user"?"user":"ai",false);
+  });
+
+  closeModals();
+}
+
+/* ---------- CHAT ---------- */
+
+function addMessage(text,type,withActions=true){
+
+  const row=document.createElement("div");
+  row.className="message "+type;
+
+  if(type==="ai"){
+    const avatar=document.createElement("div");
+    avatar.className="avatar";
+    avatar.textContent="A";
+    row.appendChild(avatar);
+  }
+
+  const content=document.createElement("div");
+
+  const bubble=document.createElement("div");
+  bubble.className="bubble";
+  bubble.textContent=text;
+
+  content.appendChild(bubble);
+
+  if(type==="ai" && withActions){
+
+    const actions=document.createElement("div");
+    actions.className="message-actions";
+
+    const copy=document.createElement("button");
+    copy.textContent="Copy";
+    copy.onclick=()=>{
+      navigator.clipboard?.writeText(text);
+    };
+
+    const retry=document.createElement("button");
+    retry.textContent="Retry";
+    retry.onclick=retryLast;
+
+    actions.appendChild(copy);
+    actions.appendChild(retry);
+
+    content.appendChild(actions);
+  }
+
+  row.appendChild(content);
+  chat.appendChild(row);
+
+  chat.scrollTop=chat.scrollHeight;
+
+  return row;
+}
+
+async function sendMessage(){
+
+  if(isGenerating)return;
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  const welcome=document.getElementById("welcome");
+  if(welcome)welcome.remove();
+
+  addMessage(text,"user");
+
+  currentChat.push({
+    role:"user",
+    text
+  });
+
+  input.value="";
+  autoResize(input);
+
+  const typing=document.createElement("div");
+  typing.className="typing";
+  typing.id="typing";
+  typing.innerHTML="AMORA is thinking <span>•••</span>";
+  chat.appendChild(typing);
+  chat.scrollTop=chat.scrollHeight;
+
+  isGenerating=true;
+  sendButton.disabled=true;
+
+  controller=new AbortController();
+
+  try{
+
+    const response=await fetch("/api/chat",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        message:text,
+        history:conversation,
+        personality
+      }),
+      signal:controller.signal
+    });
+
+    const data=await response.json();
+
+    if(typing)typing.remove();
+
+    if(!response.ok || !data.success){
+      throw new Error(data.error || "AMORA backend error");
     }
 
-    function sendMessage() {
-      const text = input.value.trim();
+    const reply=data.reply || "AMORA couldn't generate a response.";
 
-      if (!text) {
-        return;
-      }
+    addMessage(reply,"ai");
 
-      const welcome = document.getElementById("welcome");
+    conversation.push({
+      role:"user",
+      parts:[{text:text}]
+    });
 
-      if (welcome) {
-        welcome.remove();
-      }
+    conversation.push({
+      role:"model",
+      parts:[{text:reply}]
+    });
 
-      addMessage(text, "user");
+    currentChat.push({
+      role:"model",
+      text:reply
+    });
 
-      input.value = "";
+    saveCurrentChat();
+    renderHistory();
 
-      const typing = document.createElement("div");
-      typing.className = "typing";
-      typing.id = "typing";
-      typing.textContent = "AMORA AI is thinking...";
-      chat.appendChild(typing);
+  }catch(error){
 
-      chat.scrollTop = chat.scrollHeight;
+    if(typing)typing.remove();
 
-      setTimeout(function() {
-        const oldTyping = document.getElementById("typing");
-
-        if (oldTyping) {
-          oldTyping.remove();
-        }
-
-        addMessage(
-          "Hi! I'm AMORA AI. 🤖\n\n" +
-          "Your message was received successfully.\n\n" +
-          "The AI brain/API connection will be added in the next step. This interface is now ready for the real AI backend.",
-          "ai"
-        );
-      }, 800);
-    }
-
-    function useSuggestion(text) {
-      input.value = text;
-      input.focus();
-    }
-
-    function handleKey(event) {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        sendMessage();
-      }
-    }
-
-    function showMenu() {
-      alert(
-        "AMORA AI\n\n" +
-        "More features will be added here soon:\n" +
-        "• AI Chat\n" +
-        "• Image AI\n" +
-        "• Voice\n" +
-        "• Code Assistant\n" +
-        "• File Tools\n" +
-        "• More AI tools"
+    if(error.name==="AbortError"){
+      addMessage("Generation stopped.","ai");
+    }else{
+      addMessage(
+        "⚠️ AMORA connection error.\n\n"+
+        error.message+
+        "\n\nPlease check the Vercel deployment and API configuration.",
+        "ai"
       );
     }
-  </script>
 
-</body>
-  </html>
+  }finally{
+
+    isGenerating=false;
+    sendButton.disabled=false;
+    controller=null;
+  }
+}
+
+function retryLast(){
+
+  const lastUser=[...currentChat].reverse().find(x=>x.role==="user");
+
+  if(!lastUser)ret

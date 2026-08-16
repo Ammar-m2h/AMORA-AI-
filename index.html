@@ -1,1 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>AMORA AI</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 16px;
+      background: #111827;
+      border-bottom: 1px solid #273244;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+    }
+
+    .brand p {
+      color: #9ca3af;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .menu-btn {
+      border: 0;
+      background: #1f2937;
+      color: white;
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    #chat {
+      flex: 1;
+      padding: 20px 14px 120px;
+      overflow-y: auto;
+    }
+
+    .welcome {
+      text-align: center;
+      padding: 70px 15px 30px;
+    }
+
+    .welcome .big-logo {
+      width: 75px;
+      height: 75px;
+      margin: auto;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .welcome h2 {
+      margin-top: 18px;
+      font-size: 28px;
+    }
+
+    .welcome p {
+      margin-top: 8px;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+
+    .message {
+      display: flex;
+      margin: 14px 0;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 85%;
+      padding: 12px 15px;
+      border-radius: 16px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .user .bubble {
+      background: #4f46e5;
+      border-bottom-right-radius: 5px;
+    }
+
+    .ai .bubble {
+      background: #182235;
+      border: 1px solid #29364c;
+      border-bottom-left-radius: 5px;
+    }
+
+    .suggestions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .suggestion {
+      padding: 13px;
+      border: 1px solid #303d52;
+      background: #121a2a;
+      color: #e5e7eb;
+      border-radius: 13px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .suggestion:hover {
+      background: #1b2639;
+    }
+
+    .input-area {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+      background: rgba(11, 16, 32, 0.96);
+      border-top: 1px solid #273244;
+    }
+
+    .input-box {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    textarea {
+      flex: 1;
+      min-height: 48px;
+      max-height: 130px;
+      resize: none;
+      border: 1px solid #344156;
+      border-radius: 15px;
+      background: #151e2f;
+      color: white;
+      padding: 13px;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    textarea:focus {
+      border-color: #6366f1;
+    }
+
+    button.send {
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-radius: 14px;
+      background: #6366f1;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    button.send:active {
+      transform: scale(0.95);
+    }
+
+    .typing {
+      color: #9ca3af;
+      font-size: 13px;
+      margin: 8px 5px;
+    }
+
+    @media (max-width: 600px) {
+      .welcome {
+        padding-top: 45px;
+      }
+
+      .welcome h2 {
+        font-size: 24px;
+      }
+
+      .suggestions {
+        grid-template-columns: 1fr;
+      }
+
+      .bubble {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <header>
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <h1>AMORA AI</h1>
+          <p>Your next-generation AI assistant</p>
+        </div>
+      </div>
+
+      <button class="menu-btn" onclick="showMenu()">☰</button>
+    </header>
+
+    <main id="chat">
+
+      <section class="welcome" id="welcome">
+        <div class="big-logo">A</div>
+
+        <h2>Hello, I'm AMORA AI</h2>
+
+        <p>
+          Ask me anything. Your personal AI assistant is ready.
+        </p>
+
+        <div class="suggestions">
+          <button class="suggestion"
+            onclick="useSuggestion('Explain something to me simply')">
+            💡 Explain something
+          </button>
+
+          <button class="suggestion"
+            onclick="useSuggestion('Help me write some code')">
+            💻 Write code
+          </button>
+
+          <button class="suggestion"
+            onclick="useSuggestion('Give me some creative ideas')">
+            ✨ Creative ideas
+          </button>
+
+          <button class="suggestion"
+            onclick="useSuggestion('Help me make a plan')">
+            📋 Make a plan
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <div class="input-area">
+      <div class="input-box">
+
+        <textarea
+          id="messageInput"
+          placeholder="Message AMORA AI..."
+          rows="1"
+          onkeydown="handleKey(event)"
+        ></textarea>
+
+        <button class="send" onclick="sendMessage()">➤</button>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("messageInput");
+
+    function addMessage(text, type) {
+      const message = document.createElement("div");
+      message.className = "message " + type;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.textContent = text;
+
+      message.appendChild(bubble);
+      chat.appendChild(message);
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = input.value.trim();
+
+      if (!text) {
+        return;
+      }
+
+      const welcome = document.getElementById("welcome");
+
+      if (welcome) {
+        welcome.remove();
+      }
+
+      addMessage(text, "user");
+
+      input.value = "";
+
+      const typing = document.createElement("div");
+      typing.className = "typing";
+      typing.id = "typing";
+      typing.textContent = "AMORA AI is thinking...";
+      chat.appendChild(typing);
+
+      chat.scrollTop = chat.scrollHeight;
+
+      setTimeout(function() {
+        const oldTyping = document.getElementById("typing");
+
+        if (oldTyping) {
+          oldTyping.remove();
+        }
+
+        addMessage(
+          "Hi! I'm AMORA AI. 🤖\n\n" +
+          "Your message was received successfully.\n\n" +
+          "The AI brain/API connection will be added in the next step. This interface is now ready for the real AI backend.",
+          "ai"
+        );
+      }, 800);
+    }
+
+    function useSuggestion(text) {
+      input.value = text;
+      input.focus();
+    }
+
+    function handleKey(event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function showMenu() {
+      alert(
+        "AMORA AI\n\n" +
+        "More features will be added here soon:\n" +
+        "• AI Chat\n" +
+        "• Image AI\n" +
+        "• Voice\n" +
+        "• Code Assistant\n" +
+        "• File Tools\n" +
+        "• More AI tools"
+      );
+    }
+  </script>
+
+</body>
+  </html>
